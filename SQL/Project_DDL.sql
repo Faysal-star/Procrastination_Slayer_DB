@@ -1,3 +1,9 @@
+DROP TABLE Students;
+DROP TABLE Instructors;
+DROP TABLE Courses;
+DROP TABLE Enrollments ;
+DROP TABLE Assessment ;
+
 -- Creating the Students table
 CREATE TABLE Students (
     Student_id NUMBER PRIMARY KEY,
@@ -7,6 +13,8 @@ CREATE TABLE Students (
     Major VARCHAR2(100),
     Enrollment_year NUMBER
 );
+
+
 
 -- Creating the Instructors table
 CREATE TABLE Instructors (
@@ -25,9 +33,10 @@ CREATE TABLE Courses (
     Course_content VARCHAR2(400),
     Credit NUMBER,
     CONSTRAINT fk_instructor
-    FOREIGN KEY (Instructor_id)
-    REFERENCES Instructors(Instructor_id)
+        FOREIGN KEY (Instructor_id)
+        REFERENCES Instructors(Instructor_id) ON DELETE CASCADE
 );
+
 
 -- Creating the Enrollments table
 CREATE TABLE Enrollments (
@@ -38,12 +47,13 @@ CREATE TABLE Enrollments (
     Term VARCHAR2(20),
     Type VARCHAR2(20),
     CONSTRAINT fk_student
-    FOREIGN KEY (Student_id)
-    REFERENCES Students(Student_id),
+        FOREIGN KEY (Student_id)
+        REFERENCES Students(Student_id) ON DELETE CASCADE,
     CONSTRAINT fk_course
-    FOREIGN KEY (Course_code)
-    REFERENCES Courses(Course_Code)
+        FOREIGN KEY (Course_code)
+        REFERENCES Courses(Course_Code) ON DELETE CASCADE
 );
+
 
 -- Creating the Assessment table
 CREATE TABLE Assessment (
@@ -53,8 +63,8 @@ CREATE TABLE Assessment (
     GPA NUMBER,
     Comments VARCHAR2(200),
     CONSTRAINT fk_enrollment
-    FOREIGN KEY (Enrollment_id)
-    REFERENCES Enrollments(Enrollment_id)
+        FOREIGN KEY (Enrollment_id)
+        REFERENCES Enrollments(Enrollment_id) ON DELETE CASCADE
 );
 
 
@@ -130,3 +140,4 @@ INSERT INTO Assessment VALUES(10, 10, 82, 3.3, 'Good grasp of electromagnetic th
 
 
 commit;
+
