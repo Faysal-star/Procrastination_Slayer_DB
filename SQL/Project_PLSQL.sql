@@ -43,3 +43,42 @@ BEGIN
 END LOOP; 
     DBMS_OUTPUT.PUT_LINE('Total courses: ' || v_count);
 END;
+
+-- Array and Extend Function
+SET SERVEROUTPUT ON
+DECLARE
+    TYPE t_numbers IS VARRAY(5) of NUMBER;
+    v_numbers t_numbers:=t_numbers();
+BEGIN
+    FOR i IN 1..5 LOOP
+        v_numbers.EXTEND();
+        v_numbers(v_numbers.LAST) := i * 10;
+    END LOOP;
+
+    FOR i IN v_numbers.FIRST..v_numbers.LAST LOOP
+        DBMS_OUTPUT.PUT_LINE('Number: ' || v_numbers(i));
+    END LOOP;
+END;
+
+-- Comment on GPA
+SET SERVEROUTPUT ON
+DECLARE
+    cursor gpa_cursor is select * from Assessment ;
+    gpa_row Assessment%rowtype ;
+    
+BEGIN
+    open gpa_cursor ;
+    fetch gpa_cursor into gpa_row;
+    
+    WHILE gpa_cursor%found loop
+        if gpa_row.GPA > 3.5 then
+            dbms_output.put_line('Score ' || gpa_row.Score || ' is Good' ) ;
+        elsif gpa_row.GPA > 3 then
+            dbms_output.put_line('Score ' || gpa_row.Score || ' needs to improve' ) ;
+        else 
+            dbms_output.put_line('Score ' || gpa_row.Score || ' is not Good' ) ;
+        end if;
+        fetch gpa_cursor into gpa_row;
+    end loop ;
+    close gpa_cursor ;
+end ;

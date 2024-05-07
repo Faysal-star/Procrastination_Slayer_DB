@@ -1,3 +1,23 @@
+-- Drop Table
+DROP TABLE Assessment;
+
+-- Add Column
+ALTER TABLE Students ADD Phone_Number VARCHAR2(15);
+
+-- Rename Column
+ALTER TABLE Students RENAME COLUMN DOB TO Date_of_Birth;
+
+-- Modify Column Definition
+ALTER TABLE Instructors MODIFY Email VARCHAR2(150);
+
+-- Drop Column
+ALTER TABLE Courses DROP COLUMN Course_content;
+
+-- Update Data
+UPDATE Students SET Major = 'Computer Science' WHERE Full_name = 'John Doe';
+
+
+
 -- The Number of Students enrolled in each course
 SELECT c.Course_name, COUNT(e.Student_id) AS Student_Count
 FROM Courses c
@@ -47,4 +67,35 @@ WHERE NOT c.Course_name LIKE '%Computer Science%';
 -- Are all email addresses in the Students table unique?
 SELECT CASE WHEN COUNT(Email) = COUNT(DISTINCT Email)
 THEN 'Yes' ELSE 'No' END AS Are_Emails_Unique FROM Students;
+
+
+-- Show assessment results for a specific student
+SELECT c.Course_name, a.Score, a.GPA, a.Comments
+FROM Assessment a
+JOIN Enrollments e ON a.Enrollment_id = e.Enrollment_id
+JOIN Students s ON e.Student_id = s.Student_id
+JOIN Courses c ON e.Course_code = c.Course_Code
+WHERE s.Full_name = 'John Doe';
+
+-- Average GPA in each course
+WITH AverageGPA AS (
+    SELECT c.Course_name, AVG(a.GPA) AS Avg_GPA
+    FROM Assessment a
+    JOIN Enrollments e ON a.Enrollment_id = e.Enrollment_id
+    JOIN Courses c ON e.Course_code = c.Course_Code
+    GROUP BY c.Course_name
+)
+SELECT Course_name, Avg_GPA FROM AverageGPA;
+
+-- List all course with more than 1 student
+SELECT c.Course_name, COUNT(e.Student_id) AS NumberOfStudents
+FROM Courses c
+JOIN Enrollments e ON c.Course_Code = e.Course_code
+GROUP BY c.Course_name
+HAVING COUNT(e.Student_id) > 1;
+
+-- List student major Biology or Physics
+SELECT Full_name, Major
+FROM Students
+WHERE Major = 'Biology' OR Major = 'Physics';
 
